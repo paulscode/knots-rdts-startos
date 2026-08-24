@@ -10,14 +10,18 @@ import {
   peerPortExternal,
   peerPortInternal,
   peerPortLocal,
+  peerPortLocalExternal,
   rpcHostId,
   rpcInterfaceId,
   rpcPort,
+  rpcPortExternal,
   zmqBlockInterfaceId,
   zmqHostId,
   zmqTxInterfaceId,
   zmqPortBlock,
+  zmqPortBlockExternal,
   zmqPortTransaction,
+  zmqPortTransactionExternal,
 } from './utils'
 import { i18n } from './i18n'
 
@@ -30,7 +34,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
   const rpcMulti = sdk.MultiHost.of(effects, rpcHostId)
   const rpcMultiOrigin = await rpcMulti.bindPort(rpcPort, {
     protocol: 'http',
-    preferredExternalPort: rpcPort,
+    preferredExternalPort: rpcPortExternal,
   })
   const rpc = sdk.createInterface(effects, {
     name: i18n('RPC'),
@@ -80,7 +84,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
   // the permissions and keeps arriving on `peer`'s plain `bind`.
   await sdk.MultiHost.of(effects, peerLocalHostId).bindPort(peerPortLocal, {
     protocol: null,
-    preferredExternalPort: peerPortLocal,
+    preferredExternalPort: peerPortLocalExternal,
     addSsl: null,
     secure: { ssl: false },
   })
@@ -92,7 +96,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     const zmqMulti = sdk.MultiHost.of(effects, zmqHostId)
 
     const zmqBlockOrigin = await zmqMulti.bindPort(zmqPortBlock, {
-      preferredExternalPort: zmqPortBlock,
+      preferredExternalPort: zmqPortBlockExternal,
       addSsl: null,
       secure: { ssl: false },
       protocol: null,
@@ -113,7 +117,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     receipts.push(await zmqBlockOrigin.export([zmqBlock]))
 
     const zmqTxOrigin = await zmqMulti.bindPort(zmqPortTransaction, {
-      preferredExternalPort: zmqPortTransaction,
+      preferredExternalPort: zmqPortTransactionExternal,
       addSsl: null,
       secure: { ssl: false },
       protocol: null,

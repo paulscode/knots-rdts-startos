@@ -31,8 +31,31 @@ export const zmqTxInterfaceId = 'zmq-tx'
 export const zmqPortBlock = 28332
 export const zmqPortTransaction = 28333
 
-/** Host-side port the public `peer` binding prefers — the canonical p2p port. */
-export const peerPortExternal = 8333
+/**
+ * Host-side ports this package prefers.
+ *
+ * These are the ONLY ports that differ from upstream. Every container-side port
+ * below is left exactly as upstream sets it, because each package gets its own
+ * bridge IP and so internal ports cannot collide between packages. Only the
+ * host-side (LAN and Tor) bindings compete, and this package is designed to sit
+ * alongside the official `bitcoind` rather than replace it.
+ *
+ * Keeping the internal ports identical is what keeps the diff against upstream
+ * to a handful of constants, which matters because this fork has to track Knots
+ * releases indefinitely.
+ *
+ * `preferredExternalPort` is a request, not a reservation: the first service to
+ * claim a port gets it and later claimants silently fall back to a random one.
+ * So these exist for predictability, not to prevent an error, and no dependent
+ * should ever assume them. Resolve the live binding instead.
+ */
+export const rpcPortExternal = 19432
+export const peerPortLocalExternal = 19434
+export const zmqPortBlockExternal = 19532
+export const zmqPortTransactionExternal = 19533
+
+/** Host-side port the public `peer` binding prefers. */
+export const peerPortExternal = 19433
 /** Container port bitcoind plain-binds (`bind`); the `peer` binding maps here. */
 export const peerPortInternal = 58333
 /** Container port bitcoind whitelists (`whitebind`); the `peer-local` binding maps here. */
