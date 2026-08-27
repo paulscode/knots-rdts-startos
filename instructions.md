@@ -42,6 +42,8 @@ Four configuration actions cover the full set of editable `bitcoin.conf` values,
 - **RPC Settings** — RPC threads, work queue, server timeout.
 - **Other Settings** — ZMQ, txindex, block templates, coinstats index, block filters (BIP158/157), pruning, dbcache, wallet master switches, NAT-PMP, max upload target, and more.
 
+Turning on txindex, the coinstats index, or block filters after the chain is already synced starts a rebuild from the first block. The **Index Sync** health check on the Dashboard tracks it, and anything relying on that index — transaction lookups, filter-based wallet scans — stays incomplete until it finishes, even though the node itself reports fully synced.
+
 ### RPC users
 
 - **Generate RPC User Credentials** — create a username/password pair for an external client.
@@ -89,3 +91,5 @@ Three things to watch for during an actual split:
 
 - **Wallet actions cover hot-wallet basics only.** Anything beyond the listed actions (coin control, PSBTs, multisig, hardware-wallet flows) needs an external wallet talking to the RPC interface.
 - **Advanced i2pd tuning is not exposed.** Bandwidth class, transit share, floodfill, console, and tunnel limits are baked into the bundled `i2pd.conf`. To change them, edit `i2pd.conf` on the `i2pd` volume directly.
+- **The service log filters the I2P router's routine chatter.** Lines the router still prints carry an `[i2pd]` prefix; Bitcoin's own lines are unprefixed. Real router problems still appear — only known-routine network noise is dropped.
+- **The bundled I2P router carries only your node's traffic.** It relays nothing for other I2P users, so enabling I2P costs you your own Bitcoin traffic and nothing more. An update also raised its bandwidth class from L to O, which makes inbound I2P reliable without adding any relayed traffic. Both are defaults: set `notransit` or the bandwidth class in `i2pd.conf` on the `i2pd` volume and your values stick — including turning relaying on, if you want to support the I2P network.
