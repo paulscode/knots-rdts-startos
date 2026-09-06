@@ -23,9 +23,26 @@ export const manifest = setupManifest({
       },
       arch: ['x86_64', 'aarch64', 'riscv64'],
     },
+    // OUR BUILD of v0.8.0, not `ghcr.io/start9labs/btc-rpc-proxy`, carrying
+    // PR #34. Two upstream defects, either of which stops a pruned node's
+    // dependents dead and neither of which clears on its own:
+    //
+    //   - The witness check rejected any block whose coinbase commits to
+    //     witnesses the block does not carry. Blocks mined during SegWit
+    //     signalling have exactly that shape and are valid; mainnet 434499 is
+    //     the first. Every peer returns the same bytes, so every peer "failed",
+    //     the block was never fetched, and an indexer could never pass that
+    //     height.
+    //   - The passthrough cookie was read once at startup. bitcoind writes a
+    //     new one every time it starts, so from this node's next restart the
+    //     proxy answered its dependents 401 forever, and only restarting the
+    //     proxy cleared it.
+    //
+    // Same three architectures as the Start9 image, riscv64 included, so this
+    // costs no platform support. Swap back once #34 lands upstream.
     proxy: {
       source: {
-        dockerTag: 'ghcr.io/start9labs/btc-rpc-proxy:v0.8.0',
+        dockerTag: 'paulscode/btc-rpc-proxy:v0.8.0-blake2b.3',
       },
       arch: ['x86_64', 'aarch64', 'riscv64'],
     },
