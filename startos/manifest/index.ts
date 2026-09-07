@@ -23,9 +23,10 @@ export const manifest = setupManifest({
       },
       arch: ['x86_64', 'aarch64', 'riscv64'],
     },
-    // OUR BUILD of v0.8.0, not `ghcr.io/start9labs/btc-rpc-proxy`, carrying
-    // PR #34. Two upstream defects, either of which stops a pruned node's
-    // dependents dead and neither of which clears on its own:
+    // The Start9 image again, and the first version of it worth running on a
+    // pruned node. v0.8.1 is tagged at the merge of PR #34, which fixed two
+    // defects that each stopped a pruned node's dependents dead and neither of
+    // which cleared on its own:
     //
     //   - The witness check rejected any block whose coinbase commits to
     //     witnesses the block does not carry. Blocks mined during SegWit
@@ -38,11 +39,15 @@ export const manifest = setupManifest({
     //     proxy answered its dependents 401 forever, and only restarting the
     //     proxy cleared it.
     //
-    // Same three architectures as the Start9 image, riscv64 included, so this
-    // costs no platform support. Swap back once #34 lands upstream.
+    // The previous release carried our own build of those fixes, because they
+    // had not been released upstream yet. They have been, so this is back on
+    // the official image: same fixes, same three architectures, and none of the
+    // BLAKE2b header work this chain has no use for.
+    //
+    // Anything below v0.8.1 is not safe to pin here. v0.8.0 has both defects.
     proxy: {
       source: {
-        dockerTag: 'paulscode/btc-rpc-proxy:v0.8.0-blake2b.3',
+        dockerTag: 'ghcr.io/start9labs/btc-rpc-proxy:v0.8.1',
       },
       arch: ['x86_64', 'aarch64', 'riscv64'],
     },
