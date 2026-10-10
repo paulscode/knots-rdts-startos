@@ -4,6 +4,11 @@
 
 # Bitcoin Knots (RDTS) on StartOS
 
+> **Retired.** This companion existed for the BIP-110 (RDTS) soft fork, and that period
+> has passed. It is no longer maintained and receives no further updates. For this
+> project's chain, use the [Bitcoin Knots (BLAKE2b) Companion](https://github.com/paulscode/knots-blake2b-startos)
+> instead.
+
 > Everything not listed in this document should behave the same as upstream
 > Bitcoin Knots. If a feature, setting, or behavior is not mentioned here, the
 > upstream documentation is accurate and fully applicable — see the
